@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>🎰 Şans Slot Makinesi</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0c0c0c;
+      color: #fff;
+      text-align: center;
+      padding-top: 60px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    .slot {
+      font-size: 5em;
+      margin: 30px;
+      animation: spin 0.3s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    button {
+      font-size: 1.2em;
+      padding: 12px 40px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #218838;
+    }
+
+    .puan, .sonuc {
+      margin-top: 20px;
+      font-size: 1.4em;
+    }
+
+    audio {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎰 Şans Slot Makinesi 🎰</h1>
+  <div class="slot" id="slot">🍀 🍑 🍺</div>
+  <button onclick="oyna()">Döndür</button>
+  <div class="sonuc" id="sonuc"></div>
+  <div class="puan" id="puan">Puan: 0</div>
+
+  <!-- Müzik: Dilersen şuraya kendi müziğini koyabilirsin -->
+  <audio id="muzik" autoplay loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    Tarayıcınız müziği desteklemiyor.
+  </audio>
+
+  <script>
+    const semboller = ["🍀", "🤘", "⚽", "🍺", "🌹", "🍑"];
+    let puan = 0;
+    let interval;
+
+    function oyna() {
+      clearInterval(interval);
+      let count = 0;
+
+      // Animasyonlu döndürme
+      interval = setInterval(() => {
+        const a = randomEmoji(), b = randomEmoji(), c = randomEmoji();
+        document.getElementById("slot").textContent = `${a} ${b} ${c}`;
+        count++;
+        if (count > 10) {
+          clearInterval(interval);
+          sonucuYaz(a, b, c);
+        }
+      }, 150);
+
+      // Müzik başlat
+      const muzik = document.getElementById("muzik");
+      muzik.play().catch(() => {}); // Sessiz hatalar
+    }
+
+    function randomEmoji() {
+      return semboller[Math.floor(Math.random() * semboller.length)];
+    }
+
+    function sonucuYaz(a, b, c) {
+      let sonuc = "";
+      if (a === b && b === c) {
+        puan += 100;
+        sonuc = "🏆 JACKPOT! +100 Puan";
+      } else if (a === b || b === c || a === c) {
+        puan += 25;
+        sonuc = "✨ İki eşleşme! +25 Puan";
+      } else {
+        sonuc = "😢 Eşleşme yok";
+      }
+      document.getElementById("sonuc").textContent = sonuc;
+      document.getElementById("puan").textContent = "Puan: " + puan;
+    }
+  </script>
+
+</body>
+</html>
